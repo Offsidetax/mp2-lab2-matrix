@@ -26,12 +26,11 @@ TEST(TDynamicMatrix, can_create_copied_matrix)
 
 TEST(TDynamicMatrix, copied_matrix_is_equal_to_source_one)
 {
+    const int size = 5;
     TDynamicVector<int> v1(10);
     v1[0] = 0; v1[1] = 1; v1[2] = 2; v1[3] = 3; v1[4] = 4; v1[5] = 5; v1[6] = 6; v1[7] = 7; v1[8] = 8; v1[9] = 9;
     TDynamicVector<int> v2(10);
     v2[0] = 9; v2[1] = 8; v2[2] = 7; v2[3] = 6; v2[4] = 5; v2[5] = 4; v2[6] = 3; v2[7] = 2; v2[8] = 1; v2[9] = 0;
-
-    const int size = 5;
     TDynamicMatrix<int> m1(size);
     m1[1] = v1;
     m1[2] = v2;
@@ -45,9 +44,14 @@ TEST(TDynamicMatrix, copied_matrix_has_its_own_memory)
 {
     const int size = 15;
     TDynamicMatrix<long long> m1(size);
-    TDynamicMatrix<long long> m2(m1);
+    TDynamicVector<long long>* v1 = m1.data();
+    long long* p1 = (*v1).data();
 
-    EXPECT_NE(&m1, &m2);
+    TDynamicMatrix<long long> m2(m1);
+    TDynamicVector<long long>* v2 = m2.data();
+    long long* p2 = (*v2).data();
+
+    EXPECT_NE(&p1, &p2);
 }
 
 TEST(TDynamicMatrix, can_get_size)
@@ -61,10 +65,9 @@ TEST(TDynamicMatrix, can_set_and_get_element)
 {
     const int size = 5;
     TDynamicVector<int> v(size);
-    for (int i = 0; i < size; i++)
-        v[i] = i;
-
+    for (int i = 0; i < size; i++) v[i] = i;
     TDynamicMatrix<int> m(4);
+
     m[0] = v;
 
     EXPECT_EQ(v, m[0]);
@@ -112,7 +115,9 @@ TEST(TDynamicMatrix, assign_operator_change_matrix_size)
     const int size = 5;
     TDynamicMatrix<int> m1(size * 2);
     TDynamicMatrix<int> m2(size);
+
     m2 = m1;
+
     EXPECT_NE(m2.size(), size);
 }
 
@@ -165,21 +170,22 @@ TEST(TDynamicMatrix, can_add_matrices_with_equal_size)
     TDynamicVector<int> v(size);
     for (int i = 0; i < size; i++)
         v[i] = i;
-
     TDynamicMatrix<int> m1(size);
     for (int i = 0; i < size; i++)
-        m1[i] = v;
-    
+        m1[i] = v; 
     v = v * 2;
     TDynamicMatrix<int> m2(size);
     for (int i = 0; i < size; i++)
         m2[i] = v;
-    
     v = v * 1.5;
     TDynamicMatrix<int> m3(size);
     for (int i = 0; i < size; i++)
         m3[i] = v;
-    ASSERT_EQ(m1 + m2, m3);
+    TDynamicMatrix<int> res(size);
+
+    res = m1 + m2;
+
+    ASSERT_EQ(res, m3);
 }
 
 TEST(TDynamicMatrix, cant_add_matrices_with_not_equal_size)
@@ -197,21 +203,22 @@ TEST(TDynamicMatrix, can_subtract_matrices_with_equal_size)
     TDynamicVector<int> v(size);
     for (int i = 0; i < size; i++)
         v[i] = i;
-
     TDynamicMatrix<int> m1(size);
     for (int i = 0; i < size; i++)
         m1[i] = v;
-
     v = v * 2;
     TDynamicMatrix<int> m2(size);
     for (int i = 0; i < size; i++)
         m2[i] = v;
-
     v = v * 0.5;
     TDynamicMatrix<int> m3(size);
     for (int i = 0; i < size; i++)
         m3[i] = v;
-    ASSERT_EQ(m2 - m1, m3);
+    TDynamicMatrix<int> res(size);
+
+    res = m2-m1;
+
+    ASSERT_EQ(res, m3);
 }
 
 TEST(TDynamicMatrix, cant_subtract_matrixes_with_not_equal_size)

@@ -78,6 +78,7 @@ public:
   }
 
   size_t size() const noexcept { return sz; }
+  T* data() const noexcept { return pMem; }
 
   // индексация
   T& operator[](size_t ind)
@@ -208,6 +209,7 @@ public:
   using TDynamicVector<TDynamicVector<T>>::operator[];
   using TDynamicVector<TDynamicVector<T>>::operator=;
   using TDynamicVector<TDynamicVector<T>>::operator*;
+  using TDynamicVector<TDynamicVector<T>>::data;
   using TDynamicVector<TDynamicVector<T>>::size;
   using TDynamicVector<TDynamicVector<T>>::at;
   ///////////////////////////////////////////////////////////////////////////////////////////////////
