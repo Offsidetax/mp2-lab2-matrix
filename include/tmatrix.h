@@ -155,7 +155,7 @@ public:
       for (int i = 0; i < vRes.sz; ++i) vRes.pMem[i] = pMem[i] - v.pMem[i];
       return vRes;
   }
-  T operator*(const TDynamicVector& v) noexcept(noexcept(T()))
+  T operator*(const TDynamicVector& v) //noexcept(noexcept(T()))
   {
       if (this->size() != v.size()) throw "Not equal sizes";
       T Res = 0;
